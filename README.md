@@ -43,65 +43,25 @@ Identificar o canal de maior faturamento e a categoria com maior taxa de devolu�
 
 A base utilizada foi a **ContosoRetailDW**, um data warehouse de varejo da Microsoft, hospedada em `2.24.101.13,1433`.
 
-### 1. Tabelas Utilizadas
+## 1. Tabelas Utilizadas
 
-#### 📦 Tabelas Fato
+📊 Tabelas Importadas
+FactSales → Tabela de fatos principal, contendo os valores de vendas e devoluções.
+DimChannel → Descreve os canais de venda (loja física, e-commerce, telefone).
+DimDate → Estrutura temporal (ano, mês, nome do mês).
+DimProduct → Detalhes dos produtos vendidos.
+DimProductSubcategory → Subcategorias dos produtos, organizando-os em grupos menores.
+DimProductCategory → Categorias principais dos produtos (ex.: Eletrônicos, Roupas, Alimentos).
 
-| Tabela | Descrição | Colunas Principais | Significado |
-|--------|-----------|--------------------|-------------|
-| `dbo.FactSales` | Registro de cada transação de venda realizada | `SalesAmount` | Valor bruto da venda (R$) |
-| | | `SalesQuantity` | Quantidade de itens vendidos |
-| | | `ReturnAmount` | Valor devolvido na transação (R$) |
-| | | `ReturnQuantity` | Quantidade de itens devolvidos |
-| | | `TotalCost` | Custo total da mercadoria vendida |
-| | | `DateKey` | Chave estrangeira para a dimensão de data |
-| | | `channelKey` | Chave estrangeira para a dimensão de canal |
-| | | `ProductKey` | Chave estrangeira para a dimensão de produto |
-| | | `StoreKey` | Chave estrangeira para a dimensão de loja |
+🧩 Observações Importantes
+A FactSales é a tabela central do modelo, conectada às dimensões que descrevem tempo, canal e produto.
+As dimensões de produto seguem uma hierarquia: Produto → Subcategoria → Categoria.
+A escolha de importar apenas essas tabelas garante desempenho otimizado no Power BI, mantendo o modelo enxuto e eficiente.
+Esse modelo segue o padrão Star Schema, muito usado em Data Warehouses para relatórios e dashboards.
 
-| Tabela | Descrição | Colunas Principais | Significado |
-|--------|-----------|--------------------|-------------|
-| `dbo.FactOnlineSales` | Transações do canal de vendas online | (Estrutura similar a FactSales) | Vendas exclusivas do canal online |
+👉 Assim, o modelo fica pronto para análises de vendas por canal, período e categoria de produto, atendendo às necessidades dos relatórios sem comprometer a performance.
 
-#### 🏷️ Tabelas Dimensão
-
-| Tabela | Descrição | Colunas Principais | Significado |
-|--------|-----------|--------------------|-------------|
-| `dbo.DimChannel` | Canais de venda disponíveis | `ChannelKey` | Identificador único do canal (PK) |
-| | | `ChannelName` | Nome do canal (Store, Online, Reseller, Catalog) |
-| | | `ChannelCategory` | Categoria agregadora do canal |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimDate` | Calendário completo para análise temporal | `DateKey` | Identificador único da data (PK) |
-| | | `FullDateLabel` | Data no formato `dd/mm/aaaa` |
-| | | `CalendarYear` | Ano calendário (2007, 2008, 2009) |
-| | | `CalendarMonth` | Número do mês (1 a 12) |
-| | | `MonthName` | Nome do mês (Janeiro, Fevereiro...) |
-| | | `CalendarQuarter` | Trimestre (Q1, Q2, Q3, Q4) |
-| | | `DayOfWeek` | Dia da semana em português |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimProduct` | Catálogo de produtos | `ProductKey` | Identificador único do produto (PK) |
-| | | `ProductName` | Nome do produto |
-| | | `ProductSubcategoryKey` | Chave para a subcategoria |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimProductSubcategory` | Subcategorias de produtos | `ProductSubcategoryKey` | Identificador único da subcategoria (PK) |
-| | | `ProductSubcategoryName` | Nome da subcategoria |
-| | | `ProductCategoryKey` | Chave para a categoria |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimProductCategory` | Categorias de produto | `ProductCategoryKey` | Identificador único da categoria (PK) |
-| | | `ProductCategoryName` | Nome da categoria (Audio, TV, PCs, etc.) |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimStore` | Lojas físicas | `StoreKey` | Identificador único da loja (PK) |
-| | | `StoreName` | Nome fantasia da loja |
-| | | `StoreType` | Tipo de loja (Flagship, Regular, Outlet) |
-| | | `GeographyKey` | Chave para localização geográfica |
-| | **Tipo:** Dimensão | | |
-| `dbo.DimGeography` | Localização geográfica | `GeographyKey` | Identificador único (PK) |
-| | | `RegionCountryName` | País (Brasil, EUA, etc.) |
-| | | `StateProvinceName` | Estado/Província |
-| | | `CityName` | Cidade |
-| | **Tipo:** Dimensão | | |
-
-### 2. Relacionamentos
+## 2. Relacionamentos
 
  Tabela de Relacionamentos
 
@@ -115,13 +75,13 @@ A base utilizada foi a **ContosoRetailDW**, um data warehouse de varejo da Micro
 | `DimProductSubcategory` | `ProductCategoryKey` | `DimProductCategory` | `ProductCategoryKey` | N:1 |
 | `DimStore` | `GeographyKey` | `DimGeography` | `GeographyKey` | N:1 |
 
-### 3. Modelo no Power BI
+## 3. Modelo no Power BI
 
 O modelo adotado segue o padrão **Star Schema** (Esquema Estrela), com `FactSales` no centro e as dimensões ao redor.
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Modelo_de_Dados.png?raw=true">
 
-#### Decisões de Modelagem
+## Decisões de Modelagem
 
 | Decisão | Justificativa |
 |---------|---------------|
@@ -137,50 +97,50 @@ O modelo adotado segue o padrão **Star Schema** (Esquema Estrela), com `FactSal
 
 As queries abaixo foram executadas no **SQL Server Management Studio** para validar os dados antes da importação para o Power BI e para análises exploratórias.
 
-### 1. Faturamento Total por Canal
+## 1. Faturamento Total por Canal
 
 # Propósito: Identificar qual canal gera mais receita e quantificar a participação de cada um.
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Query_1.png?raw=true">
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Resultado_Query_1.png?raw=true">
 
-### 2. Taxa de Devolução por Canal
+## 2. Taxa de Devolução por Canal
 
 Propósito: Identificar qual canal tem maior taxa de devolução em relação ao faturamento.
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Devolu%C3%A7%C3%A3o%20por%20Canal.png?raw=true">
 
-### 3. Evolução Mensal do Faturamento por Canal
+## 3. Evolução Mensal do Faturamento por Canal
 
 Propósito: Analisar a sazonalidade e tendências de crescimento de cada canal ao longo do tempo.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Serie%20temporal%20mensal%20por%20ano.png?raw=true">
 
-### 4. Ranking de Categorias com Maior Taxa de Devolução
+## 4. Ranking de Categorias com Maior Taxa de Devolução
 
 Propósito: Identificar quais categorias de produto têm maior taxa de devolução para direcionar ações de qualidade ou melhoria de descrição.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Categoria%20com%20a%20maior%20taxa%20de%20devolu%C3%A7%C3%A3o.png?raw=true">
 
-### 5. Ticket Médio por Canal e Ano
+## 5. Ticket Médio por Canal e Ano
 
 Propósito: Comparar o valor médio por item entre canais e identificar tendências de crescimento ou queda.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Ticket%20medio%20por%20ano%20e%20canal.png?raw=true">
 
-### 6. Análise Geográfica por Canal
+## 6. Análise Geográfica por Canal
 
 Propósito: Entender a distribuição geográfica das vendas por canal para identificar mercados prioritários.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Analise%20Geografica%20por%20Canal.png?raw=true">
 
-### 7. Piores Meses em Taxa de Devolução
+## 7. Piores Meses em Taxa de Devolução
 
  Propósito: Identificar meses críticos de devolução para planejamento de estoque e logística reversa.
 
  <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Piores%20meses%20em%20taxa%20de%20devolu%C3%A7%C3%A3o.png?raw=true">
 
- ### 📐 Medidas DAX
+ ## 📐 Medidas DAX
 
 # Faturamento Total
 
@@ -230,7 +190,7 @@ Nota técnica: ALL(DimChannel[ChannelName]) é essencial — sem ele, o RANKX co
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Rankink%20Canal.png?raw=true">
 
-### 📋 Reprodução do Projeto
+## 📋 Reprodução do Projeto
 
 Pré-requisitos
 SQL Server Management Studio (SSMS) ou Azure Data Studio
@@ -244,6 +204,42 @@ Passo a Passo
 3. Modelar os relacionamentos
 4. Criar as medidas DAX
 5. Construir o dashboard
+
+# 🔧 Transformações com Power Query
+Durante a etapa de importação das tabelas no Power BI, foram aplicadas algumas transformações para garantir simplicidade, consistência e qualidade do modelo de dados:
+
+# Remoção de Colunas Desnecessárias
+Verificação e Ajuste de Tipos de Dados
+Aplicação de Filtro em Valores Nulos (DimProduct)
+
+# 📊 Dashboard no Power BI
+O dashboard foi construído no Microsoft Power BI, com o design visual refinado no Canva para garantir clareza e atratividade. O objetivo principal foi criar uma análise interativa e intuitiva, permitindo que os usuários naveguem entre gráficos e filtros e acompanhem os principais indicadores de desempenho.
+
+# 🗂 Estrutura do Dashboard
+Comercial
+
+Apresenta os indicadores financeiros consolidados: faturamento total, ticket médio, devoluções e percentual de devolução.
+Inclui gráficos de faturamento por canal e faturamento por mês, permitindo acompanhar a evolução temporal e a distribuição das vendas.
+Objetivo: fornecer uma visão ampla e estratégica da saúde financeira da empresa.
+
+<img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Comercial.png?raw=true" >
+
+# Performance por Canal
+
+Compara o desempenho dos diferentes canais de venda (Store, Online, Reseller, Catalog).
+Mostra métricas como faturamento total, crescimento mês a mês (MoM) e ticket médio por canal.
+Inclui tendências de faturamento ao longo do tempo, permitindo identificar quais canais estão em expansão ou retração.
+Objetivo: apoiar decisões sobre estratégias comerciais específicas para cada canal.
+
+<img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Performance%20por%20Canal.png?raw=true">
+
+# Devoluções
+
+Foca na análise das devoluções, apresentando indicadores como valor total devolvido e percentual de devolução.
+Inclui comparativos por ano, mês e canal, permitindo identificar padrões e pontos críticos.
+Objetivo: oferecer insights sobre a qualidade das vendas e apoiar ações para reduzir devoluções e melhorar a experiência do cliente.
+
+<img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Analise%20de%20Devolu%C3%A7%C3%B5es.png?raw=true">
 
 ### 💡 Principais Insights
 
@@ -270,10 +266,10 @@ A decisão de negócio que se impõe é: acelerar o digital sem descuidar do fí
 Próximos Passos Analíticos
 
 #	Análise Complementar	Pergunta que Responde
-1	Margem de contribuição por canal: Cruzar FactSales[TotalCost] com custos operacionais estimados (frete, aluguel, equipe) para calcular lucro real de cada canal	"Store fatura mais, mas entrega mais lucro?"
+1	Margem de contribuição por canal: Cruzar FactSales com custos operacionais estimados (frete, aluguel, equipe) para calcular lucro real de cada canal	"Store fatura mais, mas entrega mais lucro?"
 2	Análise de sobreposição de clientes: Usar CustomerKey para identificar quantos clientes compram em mais de um canal	"Cliente omnicanal vale mais que cliente de canal único?"
-3	Sazonalidade das devoluções por categoria: Cruzar DimDate[CalendarMonth] × DimProductCategory[ProductCategoryName] para identificar padrões sazonais de devolução	"Eletrônicos têm mais devolução em janeiro (pós-Natal)? Como nos preparamos?"
-4	Previsão de faturamento com série temporal: Usar o recurso de previsão do Power BI (ou Python) para projetar o crescimen
+3	Sazonalidade das devoluções por categoria: Cruzar DimDate × DimProductCategory para identificar padrões sazonais de devolução	"Eletrônicos têm mais devolução em janeiro (pós-Natal)? Como nos preparamos?"
+4	Previsão de faturamento com série temporal: Usar o recurso de previsão do Power BI (ou Python) para projetar o crescimento.
 
 
 👤 Autor
