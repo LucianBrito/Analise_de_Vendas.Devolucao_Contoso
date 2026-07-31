@@ -8,7 +8,7 @@
 
 ---
 
-## 🧩 Descrição do Problema de Negócio
+### 🧩 Descrição do Problema de Negócio
 
 > *"Preciso entender por qual canal a empresa vende mais e onde estamos perdendo com devoluções. Quero ver Store, Online, Reseller e Catalog. Você consegue montar um painel com isso até sexta?"*
 
@@ -22,13 +22,13 @@ Sem essa clareza, decisões estratégicas — como alocação de verba de market
 
 ---
 
-## 🎯 Objetivo da Análise
+### 🎯 Objetivo da Análise
 
 Identificar o canal de maior faturamento e a categoria com maior taxa de devolução para embasar a estratégia comercial da Contoso Retail, entregando um dashboard executivo em **3 páginas** voltado ao diretor comercial.
 
 ---
 
-## 🛠️ Ferramentas e Tecnologias
+### 🛠️ Ferramentas e Tecnologias
 
 | Ferramenta | Versão | Finalidade |
 |------------|--------|------------|
@@ -39,11 +39,11 @@ Identificar o canal de maior faturamento e a categoria com maior taxa de devolu�
 
 ---
 
-## 🗄️ Estrutura do Banco de Dados
+### 🗄️ Estrutura do Banco de Dados
 
 A base utilizada foi a **ContosoRetailDW**, um data warehouse de varejo da Microsoft, hospedada em `2.24.101.13,1433`.
 
-## 1. Tabelas Utilizadas
+### 1. Tabelas Utilizadas
 
 📊 Tabelas Importadas
 FactSales → Tabela de fatos principal, contendo os valores de vendas e devoluções.
@@ -61,7 +61,7 @@ Esse modelo segue o padrão Star Schema, muito usado em Data Warehouses para rel
 
 👉 Assim, o modelo fica pronto para análises de vendas por canal, período e categoria de produto, atendendo às necessidades dos relatórios sem comprometer a performance.
 
-## 2. Relacionamentos
+### 2. Relacionamentos
 
  Tabela de Relacionamentos
 
@@ -75,13 +75,13 @@ Esse modelo segue o padrão Star Schema, muito usado em Data Warehouses para rel
 | `DimProductSubcategory` | `ProductCategoryKey` | `DimProductCategory` | `ProductCategoryKey` | N:1 |
 | `DimStore` | `GeographyKey` | `DimGeography` | `GeographyKey` | N:1 |
 
-## 3. Modelo no Power BI
+### 3. Modelo no Power BI
 
 O modelo adotado segue o padrão **Star Schema** (Esquema Estrela), com `FactSales` no centro e as dimensões ao redor.
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Modelo_de_Dados.png?raw=true">
 
-## Decisões de Modelagem
+### Decisões de Modelagem
 
 | Decisão | Justificativa |
 |---------|---------------|
@@ -93,56 +93,56 @@ O modelo adotado segue o padrão **Star Schema** (Esquema Estrela), com `FactSal
 
 ---
 
-## 🔍 Consultas SQL Utilizadas
+### 🔍 Consultas SQL Utilizadas
 
 As queries abaixo foram executadas no **SQL Server Management Studio** para validar os dados antes da importação para o Power BI e para análises exploratórias.
 
-## 1. Faturamento Total por Canal
+### 1. Faturamento Total por Canal
 
-# Propósito: Identificar qual canal gera mais receita e quantificar a participação de cada um.
+* Propósito: Identificar qual canal gera mais receita e quantificar a participação de cada um.
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Query_1.png?raw=true">
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Resultado_Query_1.png?raw=true">
 
-## 2. Taxa de Devolução por Canal
+### 2. Taxa de Devolução por Canal
 
 Propósito: Identificar qual canal tem maior taxa de devolução em relação ao faturamento.
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Devolu%C3%A7%C3%A3o%20por%20Canal.png?raw=true">
 
-## 3. Evolução Mensal do Faturamento por Canal
+### 3. Evolução Mensal do Faturamento por Canal
 
 Propósito: Analisar a sazonalidade e tendências de crescimento de cada canal ao longo do tempo.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Serie%20temporal%20mensal%20por%20ano.png?raw=true">
 
-## 4. Ranking de Categorias com Maior Taxa de Devolução
+### 4. Ranking de Categorias com Maior Taxa de Devolução
 
 Propósito: Identificar quais categorias de produto têm maior taxa de devolução para direcionar ações de qualidade ou melhoria de descrição.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Categoria%20com%20a%20maior%20taxa%20de%20devolu%C3%A7%C3%A3o.png?raw=true">
 
-## 5. Ticket Médio por Canal e Ano
+### 5. Ticket Médio por Canal e Ano
 
 Propósito: Comparar o valor médio por item entre canais e identificar tendências de crescimento ou queda.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Ticket%20medio%20por%20ano%20e%20canal.png?raw=true">
 
-## 6. Análise Geográfica por Canal
+### 6. Análise Geográfica por Canal
 
 Propósito: Entender a distribuição geográfica das vendas por canal para identificar mercados prioritários.
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Analise%20Geografica%20por%20Canal.png?raw=true">
 
-## 7. Piores Meses em Taxa de Devolução
+### 7. Piores Meses em Taxa de Devolução
 
  Propósito: Identificar meses críticos de devolução para planejamento de estoque e logística reversa.
 
  <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Piores%20meses%20em%20taxa%20de%20devolu%C3%A7%C3%A3o.png?raw=true">
 
- ## 📐 Medidas DAX
+ ### 📐 Medidas DAX
 
-# Faturamento Total
+* Faturamento Total
 
 Soma o valor bruto de todas as vendas registradas na tabela fato.
 Onde foi usado: Card principal (Página 1), Eixo de valor nos gráficos de barras e colunas.
@@ -150,7 +150,7 @@ Comportamento com filtros: Responde a qualquer segmentação ativa (canal, ano, 
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Faturamento%20Total.png?raw=true">
 
-# Total Devoluções
+* Total Devoluções
 
 Soma o valor financeiro de todas as devoluções.
 Onde foi usado: Card de alerta (Páginas 1 e 3), barras de devolução por canal e por categoria.
@@ -158,7 +158,7 @@ Comportamento com filtros: Filtrada por canal, revela onde o prejuízo com devol
 
 <image src= "https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Total%20Devolu%C3%A7%C3%B5es.png?raw=true">
 
-# % Devolução
+* % Devolução
 
 Calcula a taxa de devolução como proporção do faturamento. Resultado entre 0 e 1 (formatado como %).
 Onde foi usado: Card de taxa (Páginas 1 e 3), rótulos de dados nas barras de devolução, matriz de calor (Página 3), formatação condicional (cor dinâmica dos cards).
@@ -166,7 +166,7 @@ Nota técnica: DIVIDE com terceiro parâmetro 0 evita erro de divisão por zero 
 
 <image src= "https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/%25%20Devolu%C3%A7%C3%A3o.png?raw=true">
 
-# Ticket Médio
+* Ticket Médio
 
 Valor médio gasto por item em cada transação.
 Onde foi usado: Card (Páginas 1 e 2), gráfico de colunas agrupadas por canal (Página 2).
@@ -174,7 +174,7 @@ Nota técnica: Usar SUM na quantidade (e não COUNT) considera corretamente tran
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Ticket%20Medio.png?raw=true">
 
-# Crescimento YoY %
+* Crescimento YoY %
 
 Calcula a variação percentual do faturamento em relação ao mesmo período do ano anterior.
 Onde foi usado: Tabela de ranking (Página 2) com ícones de tendência (▲ verde para positivo, ▼ vermelho para negativo).
@@ -182,7 +182,7 @@ Comportamento com filtros: Exige um contexto de data definido. Se o usuário fil
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Crescimento%20YoY.png?raw=true">
 
-# Ranking Canal
+* Ranking Canal
 
 Atribui a posição de cada canal no ranking de faturamento (1º, 2º, 3º...).
 Onde foi usado: Cards de destaque Top 1/2/3 e Pior Canal (Página 2), ordenação da tabela de ranking.
@@ -190,7 +190,7 @@ Nota técnica: ALL(DimChannel[ChannelName]) é essencial — sem ele, o RANKX co
 
 <image src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Rankink%20Canal.png?raw=true">
 
-## 📋 Reprodução do Projeto
+### 📋 Reprodução do Projeto
 
 Pré-requisitos
 SQL Server Management Studio (SSMS) ou Azure Data Studio
@@ -205,17 +205,17 @@ Passo a Passo
 4. Criar as medidas DAX
 5. Construir o dashboard
 
-# 🔧 Transformações com Power Query
+### 🔧 Transformações com Power Query
 Durante a etapa de importação das tabelas no Power BI, foram aplicadas algumas transformações para garantir simplicidade, consistência e qualidade do modelo de dados:
 
-# Remoção de Colunas Desnecessárias
+### Remoção de Colunas Desnecessárias
 Verificação e Ajuste de Tipos de Dados
 Aplicação de Filtro em Valores Nulos (DimProduct)
 
-# 📊 Dashboard no Power BI
+### 📊 Dashboard no Power BI
 O dashboard foi construído no Microsoft Power BI, com o design visual refinado no Canva para garantir clareza e atratividade. O objetivo principal foi criar uma análise interativa e intuitiva, permitindo que os usuários naveguem entre gráficos e filtros e acompanhem os principais indicadores de desempenho.
 
-# 🗂 Estrutura do Dashboard
+### 🗂 Estrutura do Dashboard
 Comercial
 
 Apresenta os indicadores financeiros consolidados: faturamento total, ticket médio, devoluções e percentual de devolução.
@@ -224,7 +224,7 @@ Objetivo: fornecer uma visão ampla e estratégica da saúde financeira da empre
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Comercial.png?raw=true" >
 
-# Performance por Canal
+### Performance por Canal
 
 Compara o desempenho dos diferentes canais de venda (Store, Online, Reseller, Catalog).
 Mostra métricas como faturamento total, crescimento mês a mês (MoM) e ticket médio por canal.
@@ -233,7 +233,7 @@ Objetivo: apoiar decisões sobre estratégias comerciais específicas para cada 
 
 <img src="https://github.com/LucianBrito/ContosoRetailDW/blob/main/Prints/Performance%20por%20Canal.png?raw=true">
 
-# Devoluções
+### Devoluções
 
 Foca na análise das devoluções, apresentando indicadores como valor total devolvido e percentual de devolução.
 Inclui comparativos por ano, mês e canal, permitindo identificar padrões e pontos críticos.
@@ -258,14 +258,14 @@ A Contoso Retail é, essencialmente, uma empresa de varejo físico com um braço
 No entanto, depender 60% de um único canal é um risco estratégico relevante. O Online, com R$ 2,6 bilhões, já é grande o suficiente para justificar investimento dedicado, mas ainda não atingiu escala para compensar uma eventual retração do físico.
 A decisão de negócio que se impõe é: acelerar o digital sem descuidar do físico, buscando reduzir a dependência do Store para algo próximo de 50% nos próximos 2-3 anos.
 
-#	Recomendação	Impacto Esperado
+###	Recomendação	Impacto Esperado
 1	Estabelecer meta de participação do Online: Definir meta de 30% de share em 2 anos, com investimento proporcional em marketing digital, UX e logística de entrega	Redução da dependência do Store; crescimento de receita em canal de margem potencialmente maior
 2	Investigar a lucratividade real de cada canal: Cruzar faturamento com custos operacionais (aluguel, frete, logística reversa, equipe) para calcular margem de contribuição por canal	Decisão de investimento baseada em rentabilidade, não apenas em receita bruta
 3	Criar estratégia omnicanal: Mapear a sobreposição de clientes entre canais. Clientes que compram em Store + O
 
 Próximos Passos Analíticos
 
-#	Análise Complementar	Pergunta que Responde
+###	Análise Complementar	Pergunta que Responde
 1	Margem de contribuição por canal: Cruzar FactSales com custos operacionais estimados (frete, aluguel, equipe) para calcular lucro real de cada canal	"Store fatura mais, mas entrega mais lucro?"
 2	Análise de sobreposição de clientes: Usar CustomerKey para identificar quantos clientes compram em mais de um canal	"Cliente omnicanal vale mais que cliente de canal único?"
 3	Sazonalidade das devoluções por categoria: Cruzar DimDate × DimProductCategory para identificar padrões sazonais de devolução	"Eletrônicos têm mais devolução em janeiro (pós-Natal)? Como nos preparamos?"
