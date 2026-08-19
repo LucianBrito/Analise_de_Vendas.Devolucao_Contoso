@@ -1,4 +1,4 @@
-# 🛒 Contoso Retail — Vendas, Canais e Devoluções
+# 🛒 Contoso Retail — Análise de Vendas e Devoluções
 
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-2019-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
 ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=power-bi&logoColor=black)
@@ -7,54 +7,55 @@
 
 ## 📌 Visão geral
 
-Este case analisa a performance comercial da **Contoso Retail**, uma empresa fictícia de varejo com múltiplos canais de venda.
+Case de **Business Intelligence para varejo** desenvolvido com dados do ContosoRetailDW.
 
-O objetivo é demonstrar como **SQL + modelagem dimensional + Power Query + DAX + Power BI** podem ser utilizados para entender faturamento, performance por canal e impacto das devoluções.
+O objetivo é analisar **vendas, canais, ticket médio e devoluções**, transformando dados de um Data Warehouse em indicadores para apoiar decisões comerciais e operacionais.
+
+**Stack:** SQL Server + SQL + Power Query + DAX + Power BI.
 
 ---
 
 ## 🎯 Problema de negócio
 
-A diretoria comercial precisa responder três perguntas:
+A gestão precisa responder:
 
-1. **Qual canal gera mais receita?**
-2. **Onde a empresa apresenta maior impacto de devoluções?**
-3. **Como vendas, devoluções e indicadores comerciais evoluem ao longo do tempo?**
+1. **Qual canal gera maior receita?**
+2. **Qual canal apresenta maior impacto de devoluções?**
+3. **Como vendas, ticket médio e devoluções evoluem ao longo do tempo?**
+4. **Quais categorias ou períodos precisam de investigação?**
 
-A análise transforma essas perguntas em indicadores executivos para apoiar decisões comerciais e operacionais.
+A análise foi estruturada para transformar essas perguntas em KPIs e visualizações executivas.
 
 ---
 
-## 🔎 Perguntas analisadas
+## 🔎 Perguntas de negócio
 
 - Qual canal apresenta maior faturamento?
 - Qual canal apresenta maior taxa de devolução?
 - Como o faturamento evolui mensalmente?
-- Quais categorias possuem maior taxa de devolução?
-- Como o ticket médio varia entre canais e períodos?
-- Quais meses apresentam comportamento crítico de devoluções?
-- Como os canais se posicionam em ranking de faturamento?
+- Quais categorias apresentam maior impacto de devoluções?
+- Como o ticket médio varia entre canais?
+- Quais períodos apresentam aumento de devoluções?
+- Como os canais se posicionam no ranking de faturamento?
 - Existem diferenças relevantes entre Store, Online, Reseller e Catalog?
 
 ---
 
 ## 🗃️ Dados e modelo
 
-A análise utiliza o **ContosoRetailDW**, um Data Warehouse de varejo utilizado em estudos de Business Intelligence.
+O projeto utiliza o **ContosoRetailDW**, um Data Warehouse de varejo utilizado em estudos de Business Intelligence.
 
 ### Principais tabelas
 
-- `FactSales`;
-- `FactOnlineSales`;
-- `DimChannel`;
-- `DimDate`;
-- `DimProduct`;
-- `DimProductSubcategory`;
-- `DimProductCategory`;
-- `DimStore`;
-- `DimGeography`.
-
-A modelagem utiliza **Star Schema**, com tabelas fato relacionadas às dimensões de negócio.
+- `FactSales`
+- `FactOnlineSales`
+- `DimChannel`
+- `DimDate`
+- `DimProduct`
+- `DimProductSubcategory`
+- `DimProductCategory`
+- `DimStore`
+- `DimGeography`
 
 ### Hierarquia de produto
 
@@ -66,6 +67,8 @@ Subcategoria
 Produto
 ```
 
+O modelo utiliza conceitos de **Star Schema**, com tabelas fato relacionadas às dimensões de negócio.
+
 ---
 
 # 🧠 Metodologia
@@ -73,9 +76,9 @@ Produto
 ```text
 Data Warehouse
       ↓
-Exploração com SQL
+Exploração e validação com SQL
       ↓
-Validação dos dados
+Tratamento dos dados
       ↓
 Modelagem dimensional
       ↓
@@ -85,125 +88,151 @@ Medidas DAX
       ↓
 Dashboard Power BI
       ↓
-Insights e recomendações
+Insights de negócio
 ```
 
 ---
 
-# 1️⃣ SQL — Análise exploratória
+# 1️⃣ SQL — Exploração e análise
 
-As consultas SQL foram utilizadas para validar os dados antes da construção do dashboard e responder às principais perguntas de negócio.
+As consultas SQL foram utilizadas para explorar os dados, validar informações e responder às perguntas de negócio.
 
 ### Análises realizadas
 
-- faturamento total por canal;
+- faturamento por canal;
 - taxa de devolução por canal;
-- evolução mensal do faturamento;
-- ranking de categorias por devolução;
-- ticket médio por canal e ano;
+- evolução mensal;
+- ranking de categorias;
+- ticket médio por canal e período;
 - análise geográfica;
-- identificação dos meses críticos de devolução;
+- identificação de períodos críticos;
 - ranking de canais.
 
-### Recursos utilizados
+### Recursos SQL
 
-- `JOIN`;
-- `GROUP BY`;
-- `CASE WHEN`;
-- funções de agregação;
-- funções de data;
-- cálculos de percentual;
-- ranking;
-- filtros e contexto analítico.
+- `JOIN`
+- `GROUP BY`
+- `CASE WHEN`
+- funções de agregação
+- funções de data
+- cálculos percentuais
+- ranking
+- filtros e agregações analíticas
 
 ---
 
 # 2️⃣ Qualidade e preparação dos dados
 
-Antes da criação dos indicadores, foram realizadas validações para reduzir inconsistências no modelo.
+Antes da criação dos indicadores, foram realizadas etapas de preparação para reduzir inconsistências no modelo.
 
-No Power Query foram aplicados procedimentos como:
+### Power Query
 
+- seleção das tabelas necessárias;
 - remoção de colunas sem relevância analítica;
 - ajuste de tipos de dados;
 - tratamento de valores nulos;
-- seleção das tabelas necessárias;
-- preparação das dimensões para o modelo.
+- preparação das dimensões;
+- organização dos dados para o modelo.
 
 ---
 
 # 3️⃣ Modelagem dimensional
 
-O modelo segue o padrão **Star Schema**, com `FactSales` e `FactOnlineSales` como tabelas centrais e dimensões relacionadas a:
+O modelo segue o padrão **Star Schema**, utilizando fatos e dimensões para organizar a análise.
 
-- data;
-- canal;
-- produto;
-- loja;
-- geografia.
+### Fatos principais
 
-Foi utilizada direção de filtro **Dimensão → Fato**, reduzindo ambiguidades no relacionamento e facilitando a manutenção das medidas DAX.
+- `FactSales`
+- `FactOnlineSales`
+
+### Dimensões
+
+- Data
+- Canal
+- Produto
+- Loja
+- Geografia
+
+A separação entre fatos e dimensões facilita a construção das medidas e a navegação entre diferentes perspectivas do negócio.
 
 ---
 
-# 4️⃣ DAX — Indicadores
+# 4️⃣ DAX — KPIs
 
-Foram criadas medidas para acompanhar os principais KPIs do negócio.
+Foram criadas medidas para acompanhar os principais indicadores.
 
-### 💰 Indicadores financeiros
+### 💰 Financeiro
 
-- Faturamento Total;
-- Total de Devoluções;
-- Percentual de Devolução;
-- Ticket Médio.
+- Faturamento Total
+- Total de Devoluções
+- Percentual de Devolução
+- Ticket Médio
 
-### 📈 Indicadores temporais
+### 📈 Temporal
 
-- crescimento YoY;
-- evolução mensal;
-- comparação entre períodos.
+- crescimento YoY
+- evolução mensal
+- comparação entre períodos
 
 ### 🏆 Performance
 
-- ranking de canais;
-- Top canais;
-- pior canal;
-- comparação entre canais.
+- ranking de canais
+- comparação entre canais
+- melhor canal
+- canal com maior impacto de devoluções
 
-Entre os recursos DAX utilizados estão `CALCULATE`, `DIVIDE`, `SAMEPERIODLASTYEAR` e `RANKX`.
+### Recursos DAX utilizados
+
+`CALCULATE` · `DIVIDE` · `SAMEPERIODLASTYEAR` · `RANKX`
 
 ---
 
 # 📊 Dashboard
 
-O dashboard foi organizado em três perspectivas principais:
+O dashboard foi estruturado em três perspectivas:
 
-### 1. Comercial
+### Comercial
 
-Apresenta faturamento, ticket médio, devoluções, percentual de devolução, faturamento por canal e evolução temporal.
+- faturamento;
+- ticket médio;
+- devoluções;
+- percentual de devolução;
+- faturamento por canal;
+- evolução temporal.
 
-### 2. Performance por Canal
+### Performance por canal
 
-Permite comparar **Store, Online, Reseller e Catalog**, com ranking, evolução e indicadores de desempenho.
+Comparação entre:
 
-### 3. Devoluções
+- Store;
+- Online;
+- Reseller;
+- Catalog.
 
-Concentra a análise de valor devolvido, taxa de devolução, comportamento por canal, categoria e períodos críticos.
+### Devoluções
+
+Análise de:
+
+- valor devolvido;
+- taxa de devolução;
+- canal;
+- categoria;
+- período.
 
 ---
 
 # 💡 Insights de negócio
 
-O case foi construído para permitir que a gestão identifique:
+O projeto foi desenvolvido para identificar:
 
 - canais responsáveis pela maior parcela da receita;
 - canais com maior impacto de devoluções;
-- categorias que exigem investigação;
+- categorias que merecem investigação;
 - períodos com aumento de devoluções;
-- diferenças de ticket médio entre canais;
+- diferenças de ticket médio;
 - oportunidades de melhoria comercial e operacional.
 
-O objetivo é ir além da visualização e utilizar os indicadores para **orientar decisões**.
+> O objetivo do dashboard não é apenas mostrar números, mas transformar indicadores em perguntas e decisões de negócio.
 
 ---
 
@@ -211,7 +240,7 @@ O objetivo é ir além da visualização e utilizar os indicadores para **orient
 
 | Tecnologia | Aplicação |
 |---|---|
-| **SQL Server / SQL** | Consulta e análise |
+| **SQL Server / SQL** | Exploração e análise |
 | **Power Query** | Tratamento e transformação |
 | **Power BI** | Dashboard e visualização |
 | **DAX** | KPIs e métricas |
@@ -222,20 +251,20 @@ O objetivo é ir além da visualização e utilizar os indicadores para **orient
 
 # 🎯 Competências demonstradas
 
-Este projeto demonstra competências relevantes para **Analista de Dados Júnior / Analista de BI**:
-
-- interpretação de problema de negócio;
+- interpretação de problemas de negócio;
 - SQL analítico;
-- qualidade e preparação de dados;
+- preparação e qualidade de dados;
 - modelagem dimensional;
 - Power Query;
 - DAX;
-- KPIs;
+- criação de KPIs;
 - análise temporal;
 - análise de canais;
 - análise de devoluções;
 - Power BI;
 - comunicação de insights.
+
+**Posicionamento:** case desenvolvido para demonstrar competências de **Analista de Dados Júnior / Analista de BI**.
 
 ---
 
